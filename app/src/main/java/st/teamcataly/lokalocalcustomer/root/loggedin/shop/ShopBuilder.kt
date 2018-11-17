@@ -13,6 +13,7 @@ import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.OrderBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.shopselection.ShopSelectionBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.shopselection.ShopSelectionInteractor
+import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy.CLASS
@@ -42,6 +43,7 @@ class ShopBuilder(dependency: ParentComponent) : Builder<ShopRouter, ShopBuilder
         fun androidEventsService(): AndroidEventsService
         fun rootLifecycleStream(): Observable<RootLifecycleEvent>
         fun lokaLocalApi(): LokaLocalApi
+        fun loginResponse(): LoginResponse
     }
 
 
@@ -68,18 +70,10 @@ class ShopBuilder(dependency: ParentComponent) : Builder<ShopRouter, ShopBuilder
             @ShopScope
             @Provides
             @JvmStatic
-            internal fun shopRepository(api: LokaLocalApi): ShopRepository {
-                return ShopRepository(api)
+            internal fun shopRepository(api: LokaLocalApi, loginResponse: LoginResponse): ShopRepository {
+                return ShopRepository(api, loginResponse.qrId)
             }
 
-            @ShopScope
-            @Provides
-            @JvmStatic
-            internal fun shopApi(): ShopApi {
-                return object : ShopApi {
-
-                }
-            }
 
             @ShopScope
             @Provides

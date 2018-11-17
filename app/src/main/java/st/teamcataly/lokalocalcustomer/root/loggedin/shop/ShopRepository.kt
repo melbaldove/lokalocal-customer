@@ -12,17 +12,24 @@ import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.model.OrderReque
  * @author Melby Baldove
  * melbourne.baldove@owtoph.com
  */
-class ShopRepository(private val api: LokaLocalApi) {
+class ShopRepository(private val api: LokaLocalApi,
+                     private val qrId: String) {
     fun getNearestShop(lat: Double, long: Double): Single<Shop> {
         return getShop("f3db9328-6947-41ef-875c-71b730cea08f")
     }
 
     fun getMenu(shop: Shop): Single<List<Coffee>> {
-        return api.getMenu(shop.id)
+        return api.getMenu(shop.id).map {
+            val bestSeller = it.first { it.tag?.contains("BEST_SELLER") == true }
+            val mutable = it.toMutableList()
+            mutable.remove(bestSeller)
+            mutable.add(0, bestSeller)
+            mutable
+        }
     }
 
     fun order(id: String, order: List<Order>): Completable {
-        return api.buy(id, OrderRequest(order, "7666a7b9-66a5-450f-ba89-b4e19215d9c1"))
+        return api.buy(id, OrderRequest(order, qrId))
     }
 
     fun getShop(id: String): Single<Shop> {

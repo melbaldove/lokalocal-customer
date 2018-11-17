@@ -25,8 +25,8 @@ abstract class HomeModel : EpoxyModelWithHolder<HomeModel.Holder>() {
     override fun bind(holder: Holder) {
         super.bind(holder)
         holder.view.apply {
-            home_rib_name.text = name
-            home_rib_credits.text = credits
+            home_rib_name.text = "Welcome, $name!"
+            home_rib_credits.text = "You have $credits credits"
         }
     }
 

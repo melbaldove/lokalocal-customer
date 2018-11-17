@@ -13,6 +13,7 @@ import st.teamcataly.lokalocalcustomer.di.NetworkModule
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInParentView
 import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutBuilder
+import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutInteractor
 import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutParentView
 import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
@@ -81,6 +82,13 @@ class RootBuilder(dependency: ParentComponent) : ViewBuilder<RootView, RootRoute
                     view: RootView,
                     interactor: RootInteractor): RootRouter {
                 return RootRouter(view, interactor, component, LoggedOutBuilder(component), LoggedInBuilder(component))
+            }
+
+            @RootScope
+            @Provides
+            @JvmStatic
+            internal fun loggedOutListener(interactor: RootInteractor): LoggedOutInteractor.Listener {
+                return interactor.LoggedOutListener()
             }
         }
 

@@ -3,6 +3,8 @@ package st.teamcataly.lokalocalcustomer.root
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.Interactor
 import com.uber.rib.core.RibInteractor
+import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutInteractor
+import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import javax.inject.Inject
 
 /**
@@ -15,15 +17,23 @@ class RootInteractor : Interactor<RootInteractor.RootPresenter, RootRouter>() {
 
     @Inject
     lateinit var presenter: RootPresenter
-
+    private var loginResponse: LoginResponse? = null
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        router.attachLoggedIn()
+        router.attachLoggedOut()
     }
 
     override fun willResignActive() {
         super.willResignActive()
 
+    }
+
+    inner class LoggedOutListener : LoggedOutInteractor.Listener {
+        override fun onLoggedIn(loginResponse: LoginResponse) {
+            this@RootInteractor.loginResponse = loginResponse
+            router.detachLoggedOut()
+            router.attachLoggedIn(loginResponse)
+        }
     }
 
     /**

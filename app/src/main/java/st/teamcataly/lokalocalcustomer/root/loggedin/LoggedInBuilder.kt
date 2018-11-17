@@ -15,6 +15,8 @@ import st.teamcataly.lokalocalcustomer.root.RootLifecycleEvent
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.HomeBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.ShopBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.ShopParentView
+import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginDetails
+import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy.CLASS
@@ -34,7 +36,7 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [LoggedInRouter].
      */
-    fun build(parentViewGroup: ViewGroup): LoggedInRouter {
+    fun build(parentViewGroup: ViewGroup, loginResponse: LoginResponse): LoggedInRouter {
         val view = createView(parentViewGroup)
 
         val interactor = LoggedInInteractor()
@@ -45,6 +47,7 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
                 .parentComponent(dependency)
                 .view(view)
                 .loggedInEpoxyController(epoxyController)
+                .loginResponse(loginResponse)
                 .interactor(interactor)
                 .build()
         return component.loggedinRouter()
@@ -100,6 +103,9 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
 
             @BindsInstance
             fun view(view: LoggedInView): Builder
+
+            @BindsInstance
+            fun loginResponse(loginResponse: LoginResponse): Builder
 
             @BindsInstance
             fun loggedInEpoxyController(loggedInEpoxyController: LoggedInEpoxyController): Builder

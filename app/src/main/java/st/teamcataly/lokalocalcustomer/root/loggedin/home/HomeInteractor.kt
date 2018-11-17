@@ -1,13 +1,18 @@
 package st.teamcataly.lokalocalcustomer.root.loggedin.home
 
-import com.airbnb.epoxy.EpoxyController
-import com.airbnb.epoxy.EpoxyModel
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.EmptyPresenter
 import com.uber.rib.core.Interactor
 import com.uber.rib.core.RibInteractor
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
+import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
+import st.teamcataly.lokalocalcustomer.root.loggedin.ModelInitializer
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.epoxy.home
+import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import javax.inject.Inject
 
 /**
@@ -20,24 +25,45 @@ class HomeInteractor : Interactor<EmptyPresenter, HomeRouter>() {
 
     @Inject
     lateinit var loggedInEpoxyController: LoggedInEpoxyController
+    @Inject
+    lateinit var loginResponse: LoginResponse
 
+    @Inject
+    lateinit var lokaLokaLocalApi: LokaLocalApi
+
+    private var currentModelInitializer: ModelInitializer? = null
+
+    private val disposables = CompositeDisposable()
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        loggedInEpoxyController.addModel(modelInitializer)
+        currentModelInitializer = modelInitializer(loginResponse, "0")
+        loggedInEpoxyController.addModel(currentModelInitializer!!)
+        lokaLokaLocalApi.getBalance(loginResponse.qrId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val newModelInitializer = modelInitializer(loginResponse, it.balance.toString())
+                    loggedInEpoxyController.replaceModel(currentModelInitializer!!, newModelInitializer)
+                    currentModelInitializer = newModelInitializer
+                }, {
+
+                }).addTo(disposables)
 
     }
-    private val modelInitializer: EpoxyController.() -> Unit = {
+
+    private fun modelInitializer(loginResponse: LoginResponse, credits: String): ModelInitializer = {
         home {
             id("home")
-            name("melby")
-            credits("100")
+            name(loginResponse.firstName)
+            credits(credits)
             spanSizeOverride { totalSpanCount, position, itemCount -> totalSpanCount }
         }
     }
+
     override fun willResignActive() {
         super.willResignActive()
-        loggedInEpoxyController.removeModel(modelInitializer)
-        // TODO: Perform any required clean up here, or delete this method entirely if not needed.
+        disposables.clear()
+        loggedInEpoxyController.removeModel(modelInitializer(loginResponse, "100"))
     }
 
 }

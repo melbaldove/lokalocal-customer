@@ -9,6 +9,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import st.teamcataly.lokalocalcustomer.base.BasePresenter
+import st.teamcataly.lokalocalcustomer.base.ErrorModel
+import st.teamcataly.lokalocalcustomer.base.LoadingOptions
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.ShopRepository
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.model.Shop
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.coffee.CoffeeInteractor
@@ -39,18 +42,27 @@ class OrderInteractor : Interactor<OrderInteractor.OrderPresenter, OrderRouter>(
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
         router.attachCoffee()
-        presenter.hide()
+        reset()
         presenter.buy().subscribe {
+            presenter.shouldShowLoading(LoadingOptions(isLoading = true, message = "Placing your order..."))
             if (orders.isEmpty()) return@subscribe
             shopRepository.order(shop.id, orders)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .doOnEvent {
+                        presenter.shouldShowLoading(LoadingOptions(isLoading = false))
+                    }
                     .subscribe({
+                        router.detachCoffee()
+                        router.attachCoffee()
+                        reset()
+                        presenter.success()
+
                         Timber.d("THANKS FOR ORDERING")
                     }, {
+                        presenter.showError(ErrorModel(message = it.localizedMessage))
                         Timber.e(it)
-                    })
-
+                    }).addTo(disposables)
         }.addTo(disposables)
     }
 
@@ -86,20 +98,25 @@ class OrderInteractor : Interactor<OrderInteractor.OrderPresenter, OrderRouter>(
 
             Log.d("coffee", orders.toString())
         }
-
     }
-
+    private fun reset() {
+        total = 0.0
+        presenter.setTotal("0")
+        presenter.hide()
+        orders.clear()
+    }
 
     override fun willResignActive() {
         super.willResignActive()
-
+        disposables.clear()
         // TODO: Perform any required clean up here, or delete this method entirely if not needed.
     }
 
-    interface OrderPresenter {
+    interface OrderPresenter: BasePresenter {
         fun buy(): Observable<Unit>
         fun setTotal(total: String)
         fun show()
         fun hide()
+        fun success()
     }
 }

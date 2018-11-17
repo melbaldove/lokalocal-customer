@@ -5,6 +5,8 @@ import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInRouter
 import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutRouter
+import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginDetails
+import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 
 /**
  * Adds and removes children of {@link RootBuilder.RootScope}.
@@ -19,8 +21,8 @@ class RootRouter(
         private val loggedInBuilder: LoggedInBuilder) : ViewRouter<RootView, RootInteractor, RootBuilder.Component>(view, interactor, component) {
     private var loggedInRouter: LoggedInRouter? = null
     private var loggedOutRouter: LoggedOutRouter? = null
-    fun attachLoggedIn() {
-        loggedInRouter = loggedInBuilder.build(view)
+    fun attachLoggedIn(loginResponse: LoginResponse) {
+        loggedInRouter = loggedInBuilder.build(view, loginResponse)
         view.addView(loggedInRouter?.view)
         attachChild(loggedInRouter)
     }

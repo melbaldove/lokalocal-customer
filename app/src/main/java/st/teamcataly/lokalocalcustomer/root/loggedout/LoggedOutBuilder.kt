@@ -7,7 +7,10 @@ import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
+import io.reactivex.Observable
 import st.teamcataly.lokalocalcustomer.R
+import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
+import st.teamcataly.lokalocalcustomer.root.RootLifecycleEvent
 import st.teamcataly.lokalocalcustomer.root.loggedout.onboarding.OnboardingBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedout.onboarding.OnboardingInteractor
 import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
@@ -47,6 +50,9 @@ class LoggedOutBuilder(dependency: ParentComponent) : ViewBuilder<LoggedOutView,
     interface ParentComponent {
         fun parentView(): LoggedOutParentView
         fun androidEventsService(): AndroidEventsService
+        fun lokaLocalApi(): LokaLocalApi
+        fun rootLifeCycleStream(): Observable<RootLifecycleEvent>
+        fun loggedOutListener(): LoggedOutInteractor.Listener
     }
 
     @dagger.Module

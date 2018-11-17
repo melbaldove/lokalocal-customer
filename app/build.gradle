@@ -52,6 +52,7 @@ dependencies {
     implementation libraries.design
     implementation libraries.epoxy
     kapt libraries.epoxyProcessor
+    implementation libraries.materialDialogs
 
     // RIB
     implementation libraries.rib

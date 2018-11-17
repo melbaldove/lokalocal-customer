@@ -19,4 +19,8 @@ class OrderRouter(
         coffeeRouter = coffeeBuilder.build()
         attachChild(coffeeRouter)
     }
+    fun detachCoffee() {
+        detachChild(coffeeRouter)
+        coffeeRouter = null
+    }
 }

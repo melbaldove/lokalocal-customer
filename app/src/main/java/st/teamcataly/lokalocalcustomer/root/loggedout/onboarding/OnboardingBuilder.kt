@@ -7,7 +7,10 @@ import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
+import io.reactivex.Observable
 import st.teamcataly.lokalocalcustomer.R
+import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
+import st.teamcataly.lokalocalcustomer.root.RootLifecycleEvent
 import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy.CLASS
@@ -45,6 +48,8 @@ class OnboardingBuilder(dependency: ParentComponent) : ViewBuilder<OnboardingVie
     interface ParentComponent {
         fun androidEventsService(): AndroidEventsService
         fun onboardingListener(): OnboardingInteractor.Listener
+        fun lokaLocalApi(): LokaLocalApi
+        fun rootLifeCycleStream(): Observable<RootLifecycleEvent>
     }
 
     @dagger.Module

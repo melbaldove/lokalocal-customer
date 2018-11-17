@@ -41,7 +41,8 @@ abstract class CoffeeEpoxyModel : EpoxyModelWithHolder<CoffeeEpoxyModel.Holder>(
                 removeListener(coffee)
             }
             GlideApp.with(this)
-                    .load(R.drawable.covfefe)
+                    .load(coffee.itemPath)
+                    .centerCrop()
                     .into(coffee_image)
         }
     }

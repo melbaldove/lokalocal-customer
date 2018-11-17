@@ -3,89 +3,90 @@ package st.teamcataly.lokalocalcustomer.root.loggedin.home
 import com.uber.rib.core.Builder
 import com.uber.rib.core.EmptyPresenter
 import com.uber.rib.core.InteractorBaseComponent
+import dagger.BindsInstance
+import dagger.Provides
+import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
+import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
+import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import java.lang.annotation.Retention
-
+import java.lang.annotation.RetentionPolicy.CLASS
 import javax.inject.Qualifier
 import javax.inject.Scope
 
-import dagger.Provides
-import dagger.BindsInstance
-import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
-
-import java.lang.annotation.RetentionPolicy.CLASS
-
 class HomeBuilder(dependency: ParentComponent) : Builder<HomeRouter, HomeBuilder.ParentComponent>(dependency) {
 
-  /**
-   * Builds a new [HomeRouter].
-   *
-   * @return a new [HomeRouter].
-   */
-  fun build(): HomeRouter {
-    val interactor = HomeInteractor()
-    val component = DaggerHomeBuilder_Component.builder()
-        .parentComponent(dependency)
-        .interactor(interactor)
-        .build()
+    /**
+     * Builds a new [HomeRouter].
+     *
+     * @return a new [HomeRouter].
+     */
+    fun build(): HomeRouter {
+        val interactor = HomeInteractor()
+        val component = DaggerHomeBuilder_Component.builder()
+                .parentComponent(dependency)
+                .interactor(interactor)
+                .build()
 
-    return component.homeRouter()
-  }
+        return component.homeRouter()
+    }
 
-  interface ParentComponent {
-    fun loggedInEpoxyController(): LoggedInEpoxyController
-  }
+    interface ParentComponent {
+        fun loggedInEpoxyController(): LoggedInEpoxyController
+        fun loginResponse(): LoginResponse
+        fun lokaLocalApi(): LokaLocalApi
+    }
 
-
-  @dagger.Module
-  abstract class Module {
 
     @dagger.Module
-    companion object {
+    abstract class Module {
 
-      @HomeScope
-      @Provides
-      @JvmStatic
-      internal fun presenter(): EmptyPresenter {
-        return EmptyPresenter()
-      }
+        @dagger.Module
+        companion object {
 
-      @HomeScope
-      @Provides
-      @JvmStatic
-      internal fun router(component: Component, interactor: HomeInteractor): HomeRouter {
-        return HomeRouter(interactor, component)
-      }
+            @HomeScope
+            @Provides
+            @JvmStatic
+            internal fun presenter(): EmptyPresenter {
+                return EmptyPresenter()
+            }
 
-      // TODO: Create provider methods for dependencies created by this Rib. These methods should be static.
-    }
-  }
+            @HomeScope
+            @Provides
+            @JvmStatic
+            internal fun router(component: Component, interactor: HomeInteractor): HomeRouter {
+                return HomeRouter(interactor, component)
+            }
 
-
-  @HomeScope
-  @dagger.Component(modules = arrayOf(Module::class), dependencies = arrayOf(ParentComponent::class))
-  interface Component : InteractorBaseComponent<HomeInteractor>, BuilderComponent {
-
-    @dagger.Component.Builder
-    interface Builder {
-      @BindsInstance
-      fun interactor(interactor: HomeInteractor): Builder
-
-      fun parentComponent(component: ParentComponent): Builder
-      fun build(): Component
+            // TODO: Create provider methods for dependencies created by this Rib. These methods should be static.
+        }
     }
 
-  }
 
-  interface BuilderComponent {
-    fun homeRouter(): HomeRouter
-  }
+    @HomeScope
+    @dagger.Component(modules = arrayOf(Module::class), dependencies = arrayOf(ParentComponent::class))
+    interface Component : InteractorBaseComponent<HomeInteractor>, BuilderComponent {
 
-  @Scope
-  @Retention(CLASS)
-  internal annotation class HomeScope
+        @dagger.Component.Builder
+        interface Builder {
+            @BindsInstance
+            fun interactor(interactor: HomeInteractor): Builder
+
+            fun parentComponent(component: ParentComponent): Builder
+            fun build(): Component
+        }
+
+    }
+
+    interface BuilderComponent {
+        fun homeRouter(): HomeRouter
+    }
+
+    @Scope
+    @Retention(CLASS)
+    internal annotation class HomeScope
 
 
-  @Qualifier
-  @Retention(CLASS)
-  internal annotation class HomeInternal
+    @Qualifier
+    @Retention(CLASS)
+    internal annotation class HomeInternal
 }
