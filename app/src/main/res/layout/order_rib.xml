@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.OrderView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:layout_gravity="bottom"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorAccent">
+    <TextView
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textColor="#fff"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Price:"/>
+    <Button
+        android:layout_width="128dp"
+        android:background="@android:color/transparent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="#fff"
+        android:text="Buy"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+</st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.OrderView>

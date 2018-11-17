@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<st.teamcataly.lokalocalcustomer.root.loggedin.shop.shopselection.ShopSelectionView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/background_light">
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/shopselection_rib_tv1"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Scan QR code of coffee partner"/>
+
+    <com.budiyev.android.codescanner.CodeScannerView
+        app:layout_constraintTop_toBottomOf="@id/shopselection_rib_tv1"
+        android:id="@+id/scanner_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:autoFocusButtonColor="@android:color/white"
+        app:autoFocusButtonVisible="true"
+        app:flashButtonColor="@android:color/white"
+        app:flashButtonVisible="true"
+        app:frameColor="@android:color/white"
+        app:frameCornersSize="50dp"
+        app:frameAspectRatioWidth="1"
+        app:frameAspectRatioHeight="1"
+        app:frameSize="1"
+        app:frameThickness="2dp"
+        app:maskColor="#77000000"/>
+</st.teamcataly.lokalocalcustomer.root.loggedin.shop.shopselection.ShopSelectionView>

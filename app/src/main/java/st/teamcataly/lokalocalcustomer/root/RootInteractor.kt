@@ -18,13 +18,12 @@ class RootInteractor : Interactor<RootInteractor.RootPresenter, RootRouter>() {
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        router.attachLoggedOut()
+        router.attachLoggedIn()
     }
 
     override fun willResignActive() {
         super.willResignActive()
 
-        // TODO: Perform any required clean up here, or delete this method entirely if not needed.
     }
 
     /**

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInView
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="56dp">
+</st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInView>

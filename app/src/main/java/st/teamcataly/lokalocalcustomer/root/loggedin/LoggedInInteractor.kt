@@ -13,23 +13,26 @@ import javax.inject.Inject
 @RibInteractor
 class LoggedInInteractor : Interactor<LoggedInInteractor.LoggedInPresenter, LoggedInRouter>() {
 
-  @Inject
-  lateinit var presenter: LoggedInPresenter
+    @Inject
+    lateinit var presenter: LoggedInPresenter
 
-  override fun didBecomeActive(savedInstanceState: Bundle?) {
-    super.didBecomeActive(savedInstanceState)
+    @Inject
+    lateinit var loggedInEpoxyController: LoggedInEpoxyController
 
-    // TODO: Add attachment logic here (RxSubscriptions, etc.).
-  }
+    override fun didBecomeActive(savedInstanceState: Bundle?) {
+        super.didBecomeActive(savedInstanceState)
+        router.attachHome()
+        router.attachShop()
+    }
 
-  override fun willResignActive() {
-    super.willResignActive()
+    override fun willResignActive() {
+        super.willResignActive()
 
-    // TODO: Perform any required clean up here, or delete this method entirely if not needed.
-  }
+        // TODO: Perform any required clean up here, or delete this method entirely if not needed.
+    }
 
-  /**
-   * Presenter interface implemented by this RIB's view.
-   */
-  interface LoggedInPresenter
+    /**
+     * Presenter interface implemented by this RIB's view.
+     */
+    interface LoggedInPresenter
 }

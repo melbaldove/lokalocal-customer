@@ -1,5 +1,6 @@
 package st.teamcataly.lokalocalcustomer.root.loggedin
 
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.uber.rib.core.InteractorBaseComponent
@@ -7,7 +8,14 @@ import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
+import io.reactivex.Observable
+import st.teamcataly.lokalocalcustomer.R
+import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
+import st.teamcataly.lokalocalcustomer.root.RootLifecycleEvent
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.HomeBuilder
+import st.teamcataly.lokalocalcustomer.root.loggedin.shop.ShopBuilder
+import st.teamcataly.lokalocalcustomer.root.loggedin.shop.ShopParentView
+import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy.CLASS
 import javax.inject.Qualifier
@@ -28,23 +36,29 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
      */
     fun build(parentViewGroup: ViewGroup): LoggedInRouter {
         val view = createView(parentViewGroup)
+
         val interactor = LoggedInInteractor()
+        view.layoutManager = GridLayoutManager(parentViewGroup.context, 2)
+        val epoxyController = LoggedInEpoxyController()
+        view.setController(epoxyController)
         val component = DaggerLoggedInBuilder_Component.builder()
                 .parentComponent(dependency)
                 .view(view)
+                .loggedInEpoxyController(epoxyController)
                 .interactor(interactor)
                 .build()
         return component.loggedinRouter()
     }
 
     override fun inflateView(inflater: LayoutInflater, parentViewGroup: ViewGroup): LoggedInView? {
-        // TODO: Inflate a new view using the provided inflater, or create a new view programatically using the
-        // provided context from the parentViewGroup.
-        return null
+        return inflater.inflate(R.layout.loggedin_rib, parentViewGroup, false) as LoggedInView
     }
 
     interface ParentComponent {
-        // TODO: Define dependencies required from your parent interactor here.
+        fun loggedInParentView(): LoggedInParentView
+        fun androidEventsService(): AndroidEventsService
+        fun rootLifecycleStream(): Observable<RootLifecycleEvent>
+        fun lokaLocalApi(): LokaLocalApi
     }
 
     @dagger.Module
@@ -53,6 +67,10 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
         @LoggedInScope
         @Binds
         internal abstract fun presenter(view: LoggedInView): LoggedInInteractor.LoggedInPresenter
+
+        @LoggedInScope
+        @Binds
+        internal abstract fun shopParentView(loggedInParentView: LoggedInParentView): ShopParentView
 
         @dagger.Module
         companion object {
@@ -64,7 +82,7 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
                     component: Component,
                     view: LoggedInView,
                     interactor: LoggedInInteractor): LoggedInRouter {
-                return LoggedInRouter(view, interactor, component, HomeBuilder(component))
+                return LoggedInRouter(view, interactor, component, HomeBuilder(component), ShopBuilder(component))
             }
         }
 
@@ -73,7 +91,7 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
 
     @LoggedInScope
     @dagger.Component(modules = arrayOf(Module::class), dependencies = arrayOf(ParentComponent::class))
-    interface Component : InteractorBaseComponent<LoggedInInteractor>, HomeBuilder.ParentComponent, BuilderComponent {
+    interface Component : InteractorBaseComponent<LoggedInInteractor>, HomeBuilder.ParentComponent, ShopBuilder.ParentComponent, BuilderComponent {
 
         @dagger.Component.Builder
         interface Builder {
@@ -82,6 +100,9 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
 
             @BindsInstance
             fun view(view: LoggedInView): Builder
+
+            @BindsInstance
+            fun loggedInEpoxyController(loggedInEpoxyController: LoggedInEpoxyController): Builder
 
             fun parentComponent(component: ParentComponent): Builder
             fun build(): Component

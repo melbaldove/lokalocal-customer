@@ -7,8 +7,11 @@ import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
+import io.reactivex.Observable
 import st.teamcataly.lokalocalcustomer.R
+import st.teamcataly.lokalocalcustomer.di.NetworkModule
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInBuilder
+import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInParentView
 import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutParentView
 import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
@@ -30,13 +33,14 @@ class RootBuilder(dependency: ParentComponent) : ViewBuilder<RootView, RootRoute
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [RootRouter].
      */
-    fun build(parentViewGroup: ViewGroup, androidEventsService: AndroidEventsService): RootRouter {
+    fun build(parentViewGroup: ViewGroup, androidEventsService: AndroidEventsService, rootLifeCycleStream: Observable<RootLifecycleEvent>): RootRouter {
         val view = createView(parentViewGroup)
         val interactor = RootInteractor()
         val component = DaggerRootBuilder_Component.builder()
                 .parentComponent(dependency)
                 .view(view)
                 .androidEventsService(androidEventsService)
+                .rootLifeCycleStream(rootLifeCycleStream)
                 .interactor(interactor)
                 .build()
         return component.rootRouter()
@@ -47,7 +51,7 @@ class RootBuilder(dependency: ParentComponent) : ViewBuilder<RootView, RootRoute
     }
 
     interface ParentComponent {
-        // TODO: Define dependencies required from your parent interactor here.
+
     }
 
     @dagger.Module
@@ -61,8 +65,13 @@ class RootBuilder(dependency: ParentComponent) : ViewBuilder<RootView, RootRoute
         @Binds
         internal abstract fun loggedOutParentView(view: RootView): LoggedOutParentView
 
+        @RootScope
+        @Binds
+        internal abstract fun loggedInParentView(view: RootView): LoggedInParentView
+
         @dagger.Module
         companion object {
+
 
             @RootScope
             @Provides
@@ -79,7 +88,7 @@ class RootBuilder(dependency: ParentComponent) : ViewBuilder<RootView, RootRoute
     }
 
     @RootScope
-    @dagger.Component(modules = arrayOf(Module::class), dependencies = arrayOf(ParentComponent::class))
+    @dagger.Component(modules = arrayOf(Module::class, NetworkModule::class), dependencies = arrayOf(ParentComponent::class))
     interface Component : InteractorBaseComponent<RootInteractor>, LoggedOutBuilder.ParentComponent, LoggedInBuilder.ParentComponent, BuilderComponent {
 
         @dagger.Component.Builder
@@ -92,6 +101,9 @@ class RootBuilder(dependency: ParentComponent) : ViewBuilder<RootView, RootRoute
 
             @BindsInstance
             fun androidEventsService(androidEventsService: AndroidEventsService): Builder
+
+            @BindsInstance
+            fun rootLifeCycleStream(rootLifeCycleStream: Observable<RootLifecycleEvent>): Builder
 
             fun parentComponent(component: ParentComponent): Builder
             fun build(): Component
