@@ -12,10 +12,10 @@ import io.reactivex.Observable
 import st.teamcataly.lokalocalcustomer.R
 import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
 import st.teamcataly.lokalocalcustomer.root.RootLifecycleEvent
+import st.teamcataly.lokalocalcustomer.root.TransactionRepository
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.HomeBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.ShopBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.ShopParentView
-import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginDetails
 import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
@@ -38,7 +38,7 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
      */
     fun build(parentViewGroup: ViewGroup, loginResponse: LoginResponse): LoggedInRouter {
         val view = createView(parentViewGroup)
-
+        val transactionRepository = TransactionRepository()
         val interactor = LoggedInInteractor()
         view.layoutManager = GridLayoutManager(parentViewGroup.context, 2)
         val epoxyController = LoggedInEpoxyController()
@@ -48,6 +48,7 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
                 .view(view)
                 .loggedInEpoxyController(epoxyController)
                 .loginResponse(loginResponse)
+                .transactionRepository(transactionRepository)
                 .interactor(interactor)
                 .build()
         return component.loggedinRouter()
@@ -103,6 +104,9 @@ class LoggedInBuilder(dependency: ParentComponent) : ViewBuilder<LoggedInView, L
 
             @BindsInstance
             fun view(view: LoggedInView): Builder
+
+            @BindsInstance
+            fun transactionRepository(transactionRepository: TransactionRepository): Builder
 
             @BindsInstance
             fun loginResponse(loginResponse: LoginResponse): Builder

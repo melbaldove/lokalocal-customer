@@ -8,6 +8,7 @@ import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
 import st.teamcataly.lokalocalcustomer.R
+import st.teamcataly.lokalocalcustomer.root.TransactionRepository
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.ShopRepository
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.model.Shop
@@ -47,6 +48,7 @@ class OrderBuilder(dependency: ParentComponent) : ViewBuilder<OrderView, OrderRo
     interface ParentComponent {
         fun shopRepository(): ShopRepository
         fun epoxyController(): LoggedInEpoxyController
+        fun transactionRepository(): TransactionRepository
     }
 
 

@@ -12,6 +12,7 @@ import io.reactivex.schedulers.Schedulers
 import st.teamcataly.lokalocalcustomer.base.BasePresenter
 import st.teamcataly.lokalocalcustomer.base.ErrorModel
 import st.teamcataly.lokalocalcustomer.base.LoadingOptions
+import st.teamcataly.lokalocalcustomer.root.TransactionRepository
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.ShopRepository
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.model.Shop
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.coffee.CoffeeInteractor
@@ -35,7 +36,8 @@ class OrderInteractor : Interactor<OrderInteractor.OrderPresenter, OrderRouter>(
 
     @Inject
     lateinit var shop: Shop
-
+    @Inject
+    lateinit var transactionRepository: TransactionRepository
     @Inject
     lateinit var shopRepository: ShopRepository
     private val disposables = CompositeDisposable()
@@ -53,9 +55,12 @@ class OrderInteractor : Interactor<OrderInteractor.OrderPresenter, OrderRouter>(
                         presenter.shouldShowLoading(LoadingOptions(isLoading = false))
                     }
                     .subscribe({
+                        orders.forEach {
+                            transactionRepository.newTransaction(it.coffee, it.quantity, shop.partnerName)
+                        }
+                        reset()
                         router.detachCoffee()
                         router.attachCoffee()
-                        reset()
                         presenter.success()
 
                         Timber.d("THANKS FOR ORDERING")
@@ -71,18 +76,18 @@ class OrderInteractor : Interactor<OrderInteractor.OrderPresenter, OrderRouter>(
             presenter.show()
             total += coffee.price
             presenter.setTotal(total.toString())
-            if (orders.none { it.itemId == coffee.id }) {
-                orders.add(Order(coffee.id, 1))
+            if (orders.none { it.coffee == coffee }) {
+                orders.add(Order(coffee, 1))
                 Log.d("coffee", orders.toString())
                 return
             }
-            orders.first { it.itemId == coffee.id }.quantity++
+            orders.first { it.coffee == coffee }.quantity++
             Log.d("coffee", orders.toString())
         }
 
         override fun removeItem(coffee: Coffee) {
-            if (orders.none { it.itemId == coffee.id }) return
-            val order = orders.first { it.itemId == coffee.id }
+            if (orders.none { it.coffee == coffee }) return
+            val order = orders.first { it.coffee == coffee }
             total -= coffee.price
             presenter.setTotal(total.toString())
             if (order.quantity == 1) {
@@ -99,6 +104,7 @@ class OrderInteractor : Interactor<OrderInteractor.OrderPresenter, OrderRouter>(
             Log.d("coffee", orders.toString())
         }
     }
+
     private fun reset() {
         total = 0.0
         presenter.setTotal("0")
@@ -112,7 +118,7 @@ class OrderInteractor : Interactor<OrderInteractor.OrderPresenter, OrderRouter>(
         // TODO: Perform any required clean up here, or delete this method entirely if not needed.
     }
 
-    interface OrderPresenter: BasePresenter {
+    interface OrderPresenter : BasePresenter {
         fun buy(): Observable<Unit>
         fun setTotal(total: String)
         fun show()

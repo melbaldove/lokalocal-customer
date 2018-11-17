@@ -29,6 +29,7 @@ abstract class CoffeeEpoxyModel : EpoxyModelWithHolder<CoffeeEpoxyModel.Holder>(
         super.bind(holder)
         holder.view.apply {
             item_name.text = coffee.itemName
+            quantity.text = "0"
             increment.setOnClickListener {
                 count++
                 quantity.text = count.toString()

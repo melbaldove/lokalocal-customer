@@ -12,6 +12,7 @@ import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
 import st.teamcataly.lokalocalcustomer.root.loggedin.ModelInitializer
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.epoxy.home
+import st.teamcataly.lokalocalcustomer.root.loggedin.home.history.HistoryInteractor
 import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import javax.inject.Inject
 
@@ -56,7 +57,16 @@ class HomeInteractor : Interactor<EmptyPresenter, HomeRouter>() {
             id("home")
             name(loginResponse.firstName)
             credits(credits)
+            historyListener {
+                router.attachHistory()
+            }
             spanSizeOverride { totalSpanCount, position, itemCount -> totalSpanCount }
+        }
+    }
+
+    inner class HistoryListener: HistoryInteractor.Listener {
+        override fun onDone() {
+            router.detachHistory()
         }
     }
 

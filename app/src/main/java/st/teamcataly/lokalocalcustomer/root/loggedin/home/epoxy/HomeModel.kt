@@ -21,12 +21,15 @@ abstract class HomeModel : EpoxyModelWithHolder<HomeModel.Holder>() {
     @EpoxyAttribute
     @StringRes
     lateinit var credits: String
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    lateinit var historyListener: () -> Unit
 
     override fun bind(holder: Holder) {
         super.bind(holder)
         holder.view.apply {
             home_rib_name.text = "Welcome, $name!"
             home_rib_credits.text = "You have $credits credits"
+            home_rib_history.setOnClickListener { historyListener() }
         }
     }
 

@@ -9,6 +9,7 @@ import dagger.Provides
 import io.reactivex.Observable
 import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
 import st.teamcataly.lokalocalcustomer.root.RootLifecycleEvent
+import st.teamcataly.lokalocalcustomer.root.TransactionRepository
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.OrderBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.shopselection.ShopSelectionBuilder
@@ -44,6 +45,7 @@ class ShopBuilder(dependency: ParentComponent) : Builder<ShopRouter, ShopBuilder
         fun rootLifecycleStream(): Observable<RootLifecycleEvent>
         fun lokaLocalApi(): LokaLocalApi
         fun loginResponse(): LoginResponse
+        fun transactionRepository(): TransactionRepository
     }
 
 

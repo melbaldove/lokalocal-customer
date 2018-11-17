@@ -1,13 +1,19 @@
 package st.teamcataly.lokalocalcustomer.root.loggedin.home
 
+import android.view.ViewGroup
 import com.uber.rib.core.Builder
 import com.uber.rib.core.EmptyPresenter
 import com.uber.rib.core.InteractorBaseComponent
 import dagger.BindsInstance
 import dagger.Provides
 import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
+import st.teamcataly.lokalocalcustomer.root.TransactionRepository
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
+import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInParentView
+import st.teamcataly.lokalocalcustomer.root.loggedin.home.history.HistoryBuilder
+import st.teamcataly.lokalocalcustomer.root.loggedin.home.history.HistoryInteractor
 import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
+import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy.CLASS
 import javax.inject.Qualifier
@@ -34,6 +40,9 @@ class HomeBuilder(dependency: ParentComponent) : Builder<HomeRouter, HomeBuilder
         fun loggedInEpoxyController(): LoggedInEpoxyController
         fun loginResponse(): LoginResponse
         fun lokaLocalApi(): LokaLocalApi
+        fun loggedInParentView(): LoggedInParentView
+        fun androidEventsService(): AndroidEventsService
+        fun transactionRepository(): TransactionRepository
     }
 
 
@@ -53,10 +62,16 @@ class HomeBuilder(dependency: ParentComponent) : Builder<HomeRouter, HomeBuilder
             @HomeScope
             @Provides
             @JvmStatic
-            internal fun router(component: Component, interactor: HomeInteractor): HomeRouter {
-                return HomeRouter(interactor, component)
+            internal fun router(component: Component, interactor: HomeInteractor, parentView: LoggedInParentView): HomeRouter {
+                return HomeRouter(interactor, component, parentView as ViewGroup, HistoryBuilder(component))
             }
 
+            @HomeScope
+            @Provides
+            @JvmStatic
+            internal fun historyListener(interactor: HomeInteractor): HistoryInteractor.Listener {
+                return interactor.HistoryListener()
+            }
             // TODO: Create provider methods for dependencies created by this Rib. These methods should be static.
         }
     }
@@ -64,7 +79,7 @@ class HomeBuilder(dependency: ParentComponent) : Builder<HomeRouter, HomeBuilder
 
     @HomeScope
     @dagger.Component(modules = arrayOf(Module::class), dependencies = arrayOf(ParentComponent::class))
-    interface Component : InteractorBaseComponent<HomeInteractor>, BuilderComponent {
+    interface Component : InteractorBaseComponent<HomeInteractor>, HistoryBuilder.ParentComponent, BuilderComponent {
 
         @dagger.Component.Builder
         interface Builder {
