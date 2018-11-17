@@ -9,6 +9,8 @@ import dagger.BindsInstance
 import dagger.Provides
 import st.teamcataly.lokalocalcustomer.R
 import st.teamcataly.lokalocalcustomer.root.loggedout.onboarding.OnboardingBuilder
+import st.teamcataly.lokalocalcustomer.root.loggedout.onboarding.OnboardingInteractor
+import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy.CLASS
 import javax.inject.Qualifier
@@ -44,6 +46,7 @@ class LoggedOutBuilder(dependency: ParentComponent) : ViewBuilder<LoggedOutView,
 
     interface ParentComponent {
         fun parentView(): LoggedOutParentView
+        fun androidEventsService(): AndroidEventsService
     }
 
     @dagger.Module
@@ -65,6 +68,13 @@ class LoggedOutBuilder(dependency: ParentComponent) : ViewBuilder<LoggedOutView,
                     interactor: LoggedOutInteractor,
                     parentView: LoggedOutParentView): LoggedOutRouter {
                 return LoggedOutRouter(view, interactor, component, parentView as ViewGroup, OnboardingBuilder(component))
+            }
+
+            @LoggedOutScope
+            @Provides
+            @JvmStatic
+            internal fun onboardingListener(interactor: LoggedOutInteractor): OnboardingInteractor.Listener {
+                return interactor.OnboardingListener()
             }
         }
 

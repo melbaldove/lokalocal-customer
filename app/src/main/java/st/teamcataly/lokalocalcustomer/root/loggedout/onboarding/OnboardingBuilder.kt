@@ -8,6 +8,7 @@ import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
 import st.teamcataly.lokalocalcustomer.R
+import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy.CLASS
 import javax.inject.Qualifier
@@ -42,7 +43,8 @@ class OnboardingBuilder(dependency: ParentComponent) : ViewBuilder<OnboardingVie
     }
 
     interface ParentComponent {
-        // TODO: Define dependencies required from your parent interactor here.
+        fun androidEventsService(): AndroidEventsService
+        fun onboardingListener(): OnboardingInteractor.Listener
     }
 
     @dagger.Module

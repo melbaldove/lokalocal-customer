@@ -54,6 +54,10 @@ dependencies {
     kapt libraries.ribCompiler
     testImplementation libraries.ribTest
 
+    // RxJava
+    implementation libraries.rxJava
+    implementation libraries.rxKotlin
+
     // Dagger
     implementation libraries.daggerAndroid
     implementation libraries.daggerAndroidSupport
@@ -61,5 +65,6 @@ dependencies {
     kapt libraries.daggerCompiler
 
     implementation libraries.rxPermissions
+    implementation libraries.javaxInject
     implementation libraries.gson
 }

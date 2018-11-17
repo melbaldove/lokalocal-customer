@@ -11,6 +11,7 @@ import st.teamcataly.lokalocalcustomer.R
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedout.LoggedOutParentView
+import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy.CLASS
 import javax.inject.Qualifier
@@ -29,12 +30,13 @@ class RootBuilder(dependency: ParentComponent) : ViewBuilder<RootView, RootRoute
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [RootRouter].
      */
-    fun build(parentViewGroup: ViewGroup): RootRouter {
+    fun build(parentViewGroup: ViewGroup, androidEventsService: AndroidEventsService): RootRouter {
         val view = createView(parentViewGroup)
         val interactor = RootInteractor()
         val component = DaggerRootBuilder_Component.builder()
                 .parentComponent(dependency)
                 .view(view)
+                .androidEventsService(androidEventsService)
                 .interactor(interactor)
                 .build()
         return component.rootRouter()
@@ -87,6 +89,9 @@ class RootBuilder(dependency: ParentComponent) : ViewBuilder<RootView, RootRoute
 
             @BindsInstance
             fun view(view: RootView): Builder
+
+            @BindsInstance
+            fun androidEventsService(androidEventsService: AndroidEventsService): Builder
 
             fun parentComponent(component: ParentComponent): Builder
             fun build(): Component

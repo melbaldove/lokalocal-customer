@@ -19,6 +19,7 @@ class LoggedOutRouter(
     private var onboardingRouter: OnboardingRouter? = null
     fun attachOnboarding() {
         onboardingRouter = onboardingBuilder.build(loggedOutParent)
+        loggedOutParent.removeView(view)
         loggedOutParent.addView(onboardingRouter?.view)
         attachChild(onboardingRouter)
     }
@@ -26,6 +27,7 @@ class LoggedOutRouter(
         onboardingRouter ?: return
         detachChild(onboardingRouter)
         loggedOutParent.removeView(onboardingRouter?.view)
+        loggedOutParent.addView(view)
         onboardingRouter = null
     }
 }
