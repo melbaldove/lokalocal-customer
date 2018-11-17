@@ -69,8 +69,8 @@ class CoffeeInteractor : Interactor<EmptyPresenter, CoffeeRouter>() {
     }
 
     interface Listener {
-        fun addItem(id: String)
-        fun removeItem(id: String)
+        fun addItem(coffee: Coffee)
+        fun removeItem(coffee: Coffee)
     }
 
     override fun willResignActive() {

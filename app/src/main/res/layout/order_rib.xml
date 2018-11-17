@@ -2,6 +2,7 @@
 <st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.OrderView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingLeft="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
@@ -9,6 +10,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorAccent">
     <TextView
+        android:id="@+id/order_rib_tv1"
         app:layout_constraintLeft_toLeftOf="parent"
         android:textColor="#fff"
         app:layout_constraintTop_toTopOf="parent"
@@ -17,7 +19,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Total Price:"/>
+
+    <TextView
+        android:id="@+id/order_rib_total"
+        app:layout_constraintLeft_toRightOf="@id/order_rib_tv1"
+        android:textColor="#fff"
+        tools:text="P500"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/order_rib_tv1"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <Button
+        android:id="@+id/order_rib_buy"
         android:layout_width="128dp"
         android:background="@android:color/transparent"
         android:layout_height="wrap_content"

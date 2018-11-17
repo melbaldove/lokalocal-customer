@@ -6,6 +6,7 @@ import st.teamcataly.lokalocalcustomer.root.LokaLocalApi
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.model.Shop
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.model.Coffee
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.model.Order
+import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.model.OrderRequest
 
 /**
  * @author Melby Baldove
@@ -20,8 +21,8 @@ class ShopRepository(private val api: LokaLocalApi) {
         return api.getMenu(shop.id)
     }
 
-    fun order(order: List<Order>): Completable {
-        return Completable.complete()
+    fun order(id: String, order: List<Order>): Completable {
+        return api.buy(id, OrderRequest(order, "7666a7b9-66a5-450f-ba89-b4e19215d9c1"))
     }
 
     fun getShop(id: String): Single<Shop> {

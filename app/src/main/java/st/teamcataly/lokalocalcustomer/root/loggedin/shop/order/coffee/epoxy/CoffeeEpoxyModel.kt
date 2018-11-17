@@ -20,10 +20,10 @@ abstract class CoffeeEpoxyModel : EpoxyModelWithHolder<CoffeeEpoxyModel.Holder>(
     lateinit var coffee: Coffee
     private var count = 0
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
-    lateinit var addListener: (String) -> Unit
+    lateinit var addListener: (Coffee) -> Unit
 
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
-    lateinit var removeListener: (String) -> Unit
+    lateinit var removeListener: (Coffee) -> Unit
 
     override fun bind(holder: Holder) {
         super.bind(holder)
@@ -32,13 +32,13 @@ abstract class CoffeeEpoxyModel : EpoxyModelWithHolder<CoffeeEpoxyModel.Holder>(
             increment.setOnClickListener {
                 count++
                 quantity.text = count.toString()
-                addListener(coffee.id)
+                addListener(coffee)
             }
             decrement.setOnClickListener {
                 if (count == 0) return@setOnClickListener
                 count--
                 quantity.text = count.toString()
-                removeListener(coffee.id)
+                removeListener(coffee)
             }
             GlideApp.with(this)
                     .load(R.drawable.covfefe)

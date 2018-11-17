@@ -44,7 +44,7 @@ class ShopSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
         super.onFinishInflate()
         codeScanner = CodeScanner(this.context, scanner_view)
 
-        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
+        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera itemId
         codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
         // ex. listOf(BarcodeFormat.QR_CODE)
         codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
