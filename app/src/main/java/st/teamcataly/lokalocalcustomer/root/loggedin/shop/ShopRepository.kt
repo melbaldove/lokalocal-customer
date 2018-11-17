@@ -20,7 +20,8 @@ class ShopRepository(private val api: LokaLocalApi,
 
     fun getMenu(shop: Shop): Single<List<Coffee>> {
         return api.getMenu(shop.id).map {
-            val bestSeller = it.first { it.tag?.contains("BEST_SELLER") == true }
+            val bestSeller = it.firstOrNull { it.tag?.contains("BEST_SELLER") == true }
+            bestSeller ?: return@map it
             val mutable = it.toMutableList()
             mutable.remove(bestSeller)
             mutable.add(0, bestSeller)

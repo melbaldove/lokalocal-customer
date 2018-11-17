@@ -5,6 +5,7 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.View
 import com.budiyev.android.codescanner.*
+import com.google.gson.Gson
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.shopselection_rib.view.*
 import st.teamcataly.lokalocalcustomer.root.RootLifecycleEvent
@@ -54,13 +55,21 @@ class ShopSelectionView @JvmOverloads constructor(context: Context, attrs: Attri
 
         // Callbacks
         codeScanner.decodeCallback = DecodeCallback {
-            shopIdSubject.onNext(it.text)
+            try {
+                val partnerQR = Gson().fromJson(it.text, PartnerQR::class.java)
+                shopIdSubject.onNext(partnerQR.partnerId)
+            } catch (e: Exception) {
+
+            }
         }
         codeScanner.errorCallback = ErrorCallback {
             it
         }
 
         codeScanner.startPreview()
+        scanner_view.setOnClickListener {
+            codeScanner.startPreview()
+        }
     }
 
     override fun onViewRemoved(view: View?) {
