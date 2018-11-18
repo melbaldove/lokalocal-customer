@@ -20,6 +20,7 @@ import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.model.Coffee
 import st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.model.Order
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 /**
  * Coordinates Business Logic for [OrderScope].
@@ -75,7 +76,7 @@ class OrderInteractor : Interactor<OrderInteractor.OrderPresenter, OrderRouter>(
         override fun addItem(coffee: Coffee) {
             presenter.show()
             total += coffee.price
-            presenter.setTotal(total.toString())
+            presenter.setTotal(total.roundToInt().toString())
             if (orders.none { it.coffee == coffee }) {
                 orders.add(Order(coffee, 1))
                 Log.d("coffee", orders.toString())
@@ -89,7 +90,7 @@ class OrderInteractor : Interactor<OrderInteractor.OrderPresenter, OrderRouter>(
             if (orders.none { it.coffee == coffee }) return
             val order = orders.first { it.coffee == coffee }
             total -= coffee.price
-            presenter.setTotal(total.toString())
+            presenter.setTotal(total.roundToInt().toString())
             if (order.quantity == 1) {
                 orders.remove(order)
                 if (orders.isEmpty()) {

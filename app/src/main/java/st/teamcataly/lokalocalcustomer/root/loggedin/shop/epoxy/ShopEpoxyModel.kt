@@ -26,6 +26,7 @@ abstract class ShopEpoxyModel : EpoxyModelWithHolder<ShopEpoxyModel.Holder>() {
         super.bind(holder)
         holder.view.apply {
             shop_rib_name.text = shopName
+
             setOnClickListener { changeShopListener() }
         }
     }

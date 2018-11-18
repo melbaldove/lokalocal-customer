@@ -15,6 +15,7 @@ import st.teamcataly.lokalocalcustomer.root.loggedin.home.epoxy.home
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.history.HistoryInteractor
 import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 /**
  * Coordinates Business Logic for [HomeScope].
@@ -43,7 +44,7 @@ class HomeInteractor : Interactor<EmptyPresenter, HomeRouter>() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    val newModelInitializer = modelInitializer(loginResponse, it.balance.toString())
+                    val newModelInitializer = modelInitializer(loginResponse, it.balance.roundToInt().toString())
                     loggedInEpoxyController.replaceModel(currentModelInitializer!!, newModelInitializer)
                     currentModelInitializer = newModelInitializer
                 }, {

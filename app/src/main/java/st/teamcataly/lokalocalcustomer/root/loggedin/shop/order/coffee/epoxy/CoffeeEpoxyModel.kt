@@ -29,6 +29,7 @@ abstract class CoffeeEpoxyModel : EpoxyModelWithHolder<CoffeeEpoxyModel.Holder>(
         super.bind(holder)
         holder.view.apply {
             item_name.text = coffee.itemName
+            item_price.text = "P${coffee.price}"
             quantity.text = "0"
             increment.setOnClickListener {
                 count++
