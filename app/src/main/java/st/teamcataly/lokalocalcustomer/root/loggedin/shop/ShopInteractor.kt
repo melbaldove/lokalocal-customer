@@ -72,12 +72,11 @@ class ShopInteractor : Interactor<EmptyPresenter, ShopRouter>() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ shop ->
                         router.detachShopSelection()
-                        currentModelInitializer?.let {
-                            loggedInEpoxyController.replaceModel(it, modelInitializer(shop.partnerName))
-                        }
+                        val newModelInitializer = modelInitializer(shop.partnerName)
+                        loggedInEpoxyController.replaceModel(currentModelInitializer!!, newModelInitializer)
                         router.detachOrder()
                         router.attachOrder(shop)
-                        currentModelInitializer = modelInitializer(shop.partnerName)
+                        currentModelInitializer = newModelInitializer
 
                     }, {
 

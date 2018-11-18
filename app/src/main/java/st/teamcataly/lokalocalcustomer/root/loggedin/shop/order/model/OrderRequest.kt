@@ -5,6 +5,9 @@ package st.teamcataly.lokalocalcustomer.root.loggedin.shop.order.model
  * melbourne.baldove@owtoph.com
  */
 class OrderRequest(
-        val items: List<Order>,
+        val items: List<OrderRequest.Order>,
         val card: String
-)
+) {
+    class Order(val itemId: String, val quantity: Int)
+}
+

@@ -30,7 +30,7 @@ class ShopRepository(private val api: LokaLocalApi,
     }
 
     fun order(id: String, order: List<Order>): Completable {
-        return api.buy(id, OrderRequest(order, qrId))
+        return api.buy(id, OrderRequest(order.map { OrderRequest.Order(it.coffee.id, it.quantity) }, qrId))
     }
 
     fun getShop(id: String): Single<Shop> {

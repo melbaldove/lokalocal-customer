@@ -21,7 +21,7 @@ class OrderView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     override fun showError(errorModel: ErrorModel) = dialogHelper.showError(errorModel)
 
     override fun setTotal(total: String) {
-        order_rib_total.text = "P$total"
+        order_rib_total.text = "$total credits"
     }
 
     override fun onFinishInflate() {
