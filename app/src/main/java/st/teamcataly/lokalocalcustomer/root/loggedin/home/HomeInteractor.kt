@@ -13,6 +13,7 @@ import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
 import st.teamcataly.lokalocalcustomer.root.loggedin.ModelInitializer
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.epoxy.home
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.history.HistoryInteractor
+import st.teamcataly.lokalocalcustomer.root.loggedin.home.qr.QRInteractor
 import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -61,6 +62,9 @@ class HomeInteractor : Interactor<EmptyPresenter, HomeRouter>() {
             historyListener {
                 router.attachHistory()
             }
+            qrListener {
+                router.attachQr()
+            }
             spanSizeOverride { totalSpanCount, position, itemCount -> totalSpanCount }
         }
     }
@@ -69,6 +73,13 @@ class HomeInteractor : Interactor<EmptyPresenter, HomeRouter>() {
         override fun onDone() {
             router.detachHistory()
         }
+    }
+
+    inner class QrListener: QRInteractor.Listener {
+        override fun onDone() {
+            router.detachQr()
+        }
+
     }
 
     override fun willResignActive() {

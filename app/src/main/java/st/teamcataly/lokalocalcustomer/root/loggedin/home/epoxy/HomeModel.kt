@@ -23,6 +23,8 @@ abstract class HomeModel : EpoxyModelWithHolder<HomeModel.Holder>() {
     lateinit var credits: String
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
     lateinit var historyListener: () -> Unit
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    lateinit var qrListener: () -> Unit
 
     override fun bind(holder: Holder) {
         super.bind(holder)
@@ -30,6 +32,7 @@ abstract class HomeModel : EpoxyModelWithHolder<HomeModel.Holder>() {
             home_rib_name.text = "Welcome, $name!"
             home_rib_credits.text = "You have $credits credits"
             home_rib_history.setOnClickListener { historyListener() }
+            home_rib_qr.setOnClickListener { qrListener() }
         }
     }
 

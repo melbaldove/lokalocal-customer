@@ -12,6 +12,8 @@ import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInEpoxyController
 import st.teamcataly.lokalocalcustomer.root.loggedin.LoggedInParentView
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.history.HistoryBuilder
 import st.teamcataly.lokalocalcustomer.root.loggedin.home.history.HistoryInteractor
+import st.teamcataly.lokalocalcustomer.root.loggedin.home.qr.QRBuilder
+import st.teamcataly.lokalocalcustomer.root.loggedin.home.qr.QRInteractor
 import st.teamcataly.lokalocalcustomer.root.loggedout.model.LoginResponse
 import st.teamcataly.lokalocalcustomer.util.AndroidEventsService
 import java.lang.annotation.Retention
@@ -63,7 +65,7 @@ class HomeBuilder(dependency: ParentComponent) : Builder<HomeRouter, HomeBuilder
             @Provides
             @JvmStatic
             internal fun router(component: Component, interactor: HomeInteractor, parentView: LoggedInParentView): HomeRouter {
-                return HomeRouter(interactor, component, parentView as ViewGroup, HistoryBuilder(component))
+                return HomeRouter(interactor, component, parentView as ViewGroup, HistoryBuilder(component), QRBuilder(component))
             }
 
             @HomeScope
@@ -72,6 +74,13 @@ class HomeBuilder(dependency: ParentComponent) : Builder<HomeRouter, HomeBuilder
             internal fun historyListener(interactor: HomeInteractor): HistoryInteractor.Listener {
                 return interactor.HistoryListener()
             }
+
+            @HomeScope
+            @Provides
+            @JvmStatic
+            internal fun qrListener(interactor: HomeInteractor): QRInteractor.Listener {
+                return interactor.QrListener()
+            }
             // TODO: Create provider methods for dependencies created by this Rib. These methods should be static.
         }
     }
@@ -79,7 +88,7 @@ class HomeBuilder(dependency: ParentComponent) : Builder<HomeRouter, HomeBuilder
 
     @HomeScope
     @dagger.Component(modules = arrayOf(Module::class), dependencies = arrayOf(ParentComponent::class))
-    interface Component : InteractorBaseComponent<HomeInteractor>, HistoryBuilder.ParentComponent, BuilderComponent {
+    interface Component : InteractorBaseComponent<HomeInteractor>, HistoryBuilder.ParentComponent, QRBuilder.ParentComponent, BuilderComponent {
 
         @dagger.Component.Builder
         interface Builder {

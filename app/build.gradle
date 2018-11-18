@@ -76,6 +76,9 @@ dependencies {
     implementation libraries.glide
     kapt libraries.glideCompiler
 
+    implementation 'com.github.kenglxn.QRGen:javase:2.4.0'
+    implementation 'com.github.kenglxn.QRGen:android:2.4.0'
+
     implementation libraries.rxPermissions
     implementation libraries.javaxInject
     implementation libraries.gson
